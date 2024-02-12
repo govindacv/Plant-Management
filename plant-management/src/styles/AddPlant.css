@@ -1,0 +1,224 @@
+.addPlant {
+  height: 150dvh;
+  position: relative;
+  background-image: url("https://media.sketchfab.com/models/0de12849e45541538c84fe0a410ea59a/thumbnails/0afbc3a3deec482dadf6890a70398d08/277a25a3ba2345a9888cb7d25430afdf.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-sizing: border-box;
+  overflow-x: hidden  ;
+}
+.addplant-message {
+  padding: 30px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: whitesmoke;
+}
+.addplant-message h1 {
+  position: relative;
+  top: 20px;
+}
+.plant--Name {
+  padding: 5px 10px;
+}
+.plant-details {
+  height: 120dvh;
+  width: 60dvw;
+  background-color: aliceblue;
+  position: relative;
+  left: 250px;
+}
+
+.plant-radio-yes {
+  position: relative;
+  display: inline;
+  left: 250px;
+  bottom: 5px;
+}
+.plant-radio-no {
+  position: relative;
+  left: 350px;
+  bottom: 20px;
+}
+.plant-Name {
+  padding: 10px 20px;
+}
+.p-name {
+  position: relative;
+  top: 40px;
+  left: 30px;
+}
+.p-name-input input {
+  position: relative;
+  top: 50px;
+  padding: 10px 30px;
+  left: 30px;
+}
+.plant-isWareHouse {
+  position: relative;
+  top: 40px;
+  left: -10px;
+}
+.plant-warehouse {
+  position: relative;
+  top: 50px;
+}
+.p-warehouse-input1 {
+  position: relative;
+  width: fit-content;
+  left: 250px;
+  top: 5px;
+}
+.p-warehouse-input2 {
+  position: relative;
+  width: fit-content;
+  left: 350px;
+  top: -10px;
+}
+.p-warehousehouse-name {
+  position: relative;
+  right: -50px;
+  top: 20px;
+}
+.p-country-name {
+  position: relative;
+  left: 50px;
+  top: 65px;
+}
+.p-country-dropdown {
+  position: relative;
+ 
+  left: 250px;
+  top: 50px;
+}
+.p-states-name {
+  position: relative;
+  left: 50px;
+  top: 70px;
+}
+.p-states-dropdown {
+  position: relative;
+  width: fit-content;
+  left: 250px;
+  top: 50px;
+}
+.p-cities-name {
+  position: relative;
+  top: 80px;
+  left: 50px;
+}
+.p-cities-dropdown {
+  position: relative;
+  top: 60px;
+  left: 250px;
+}
+.p-country-dropdown select,
+.p-states-dropdown select,
+.p-cities-dropdown select {
+  
+  width: 200px;
+  height: 40px;
+  padding: 5px;
+}
+.p-transportation-name {
+  position: relative;
+  left: 45px;
+  top: 80px;
+}
+.p-transportation-checkbox {
+  position: relative;
+  left: 300px;
+  top: 60px;
+}
+.plant-transporterName {
+  position: relative;
+  left: 45px;
+  top: 80px;
+}
+.p-transporter-input {
+  position: relative;
+  left: 200px;
+  top: -30px;
+}
+.p-transporter-input input {
+  padding: 10px 20px;
+}
+.p-phoneNumber-name {
+  position: relative;
+  left: 45px;
+  top: 80px;
+}
+.p-phoneNumber-input {
+  position: relative;
+  left: 250px;
+  top: 50px;
+}
+
+.p-phoneNumber-input input {
+  padding: 10px 20px;
+}
+.plant-photo {
+  position: relative;
+  left: 45px;
+  top: 80px;
+}
+.plant--add {
+  position: relative;
+  left: 45px;
+  top: 150px;
+}
+
+.plant--add button {
+  padding: 10px 30px;
+  background-color: orangered;
+  border: none;
+  border: 1px solid white;
+  border-radius: 10px;
+  color: white;
+  font-family: "Times New Roman", Times, serif;
+  cursor: pointer;
+}
+.error-message {
+  color: red;
+  position: relative;
+  top: 55px;
+  left: 30px;
+}
+.error-message-warehouse {
+  color: red;
+  position: absolute;
+  left: 50px;
+  top: 45px;
+}
+.error-message-country {
+  color: red;
+  position: absolute;
+  top: 250px;
+  left: 45px;
+}
+.error-message-state {
+  color: red;
+  position: absolute;
+  top: 320px;
+  left: 45px;
+}
+.error-message-city {
+  color: red;
+  position: absolute;
+  top: 390px;
+  left: 45px;
+}
+.error-message-transporterName
+{
+  color: red;
+  position: absolute;
+  top: 390px;
+  left: 45px;
+}
+.error-message-phoneNumber
+{
+  color: red;
+  position: absolute;
+  top: 480px;
+  left: 45px;
+}

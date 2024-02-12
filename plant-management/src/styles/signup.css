@@ -1,0 +1,39 @@
+.signup-btn button
+{
+    padding: 10px 30px;
+    background-color: orangered;
+    border: none;
+    border: 1px solid white;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Times New Roman', Times, serif;
+    position: relative;
+    left: 80px;
+    top: 20px;
+    cursor: pointer;
+}
+ .error-message-signup-password
+ {
+    position: relative;
+    left: 55px;
+ }
+ .error-message--signup-email
+ {
+    position: relative;
+    left: 45px;
+ }
+ .error-message--signup-name
+ {
+    position: relative;
+    left: 55px;
+ }
+ .already-have-account
+ {
+    position: relative;
+    left: 55px;
+ }
+ .already-have-account a 
+ {
+    color: blue;
+    text-decoration: none;
+ }

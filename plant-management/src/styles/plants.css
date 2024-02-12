@@ -1,0 +1,115 @@
+.plants
+{
+    
+}
+.plants--header
+{
+    display: flex;
+    padding: 20px 10px;
+    background-color: red;
+    align-items: center;
+    justify-content: space-between;
+}
+.plants--header button
+{
+    padding: 10px 10px;
+    cursor: pointer;
+    border: none;
+    color: white;
+    background-color: orangered;
+    border: 1px solid black;
+    font-family: 'Times New Roman', Times, serif;
+
+}
+.plant-detailsss
+{
+    height: 100dvh;
+     
+}
+ 
+.plant-details-heading 
+{
+    position: absolute;
+     top: 100px;
+    left: 600px;
+
+}
+.plant-details--grid {
+    position: relative;
+    top: 100px;
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    position: relative;
+   
+}
+
+.individual-plant-details
+
+{
+    margin-left: 20px;
+    height: 450px;
+    width: 30%;
+    border: 1px solid ;
+    border-radius: 20px;
+    
+    position: relative;
+    display: flex;
+    flex-direction: column;  
+    z-index: 0;
+     
+    color: white;
+    box-shadow: 1px 1px 10px red;
+}
+.plant-image {
+        background-color: orange;
+        height: 200px;
+        width: 300px;
+        position: relative;
+        left: 40px;
+}
+
+.plant-image img {
+    
+    height: 200px;
+    width: 300px;
+    
+ 
+}
+.plant-details-name,.plant-details-address,.plant-details-warehouse,.plant-details-phonenumber
+{
+     padding: 10px;
+     color: black;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+}
+.plant-details-edit button
+{
+    padding: 10px 30px;
+    background-color: green;
+    border: none;
+    border: 1px solid white;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Times New Roman', Times, serif;
+    position: relative;
+    left: 30px;
+    top: 20px;
+    cursor: pointer;
+}
+.plant-details-delete button
+{
+    padding: 10px 30px;
+    background-color: red;
+    border: none;
+    border: 1px solid white;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Times New Roman', Times, serif;
+    position: relative;
+    left: 200px;
+    top: -16px;
+    cursor: pointer;
+}
