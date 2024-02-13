@@ -26,7 +26,7 @@ const AddPlant = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isValidPlantName, setIsValidPlantName] = useState(true);
   const [fileSelected, setFileSelected] = useState();
-  const [filesSelected, setFilesSelected] = useState([]);
+
   const [isWarehouseValue, setIsWarehouseValue] = useState<string | null>(null);
   const [isValidWarehouseChoice, setIsValidWarehouseChoice] = useState(true);
 
@@ -121,12 +121,6 @@ const AddPlant = () => {
       if (file.type === "image/jpeg" || file.type === "application/pdf") {
         if (file.size <= 50000000) {
           setFileSelected(e.target.files[0]);
-          filesSelected.push(e.target.files[0]);
-
-          console.log(filesSelected.((files)=>{
-            console.log(files);
-            
-          }));
         } else {
           alert("File size should be less than or equal to 50KB.");
         }
@@ -431,4 +425,13 @@ const AddPlant = () => {
               />
             </div>
           </div>
-   
+          <div className="plant--add">
+            <button onClick={handleOnClickAdd}>Add plant</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AddPlant;
