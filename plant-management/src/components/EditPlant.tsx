@@ -78,7 +78,7 @@ const EditPlant = () => {
 
   useEffect(() => {
     axios
-      .get(`https://localhost:44349/getcountries`)
+      .get(`https://localhost:44380/getcountries`)
       .then((response) => {
         setCountries(response.data);
       })
@@ -105,7 +105,7 @@ const EditPlant = () => {
     setSelectedCountry(value);
 
     axios
-      .get(`https://localhost:44349/getstates/${value}`)
+      .get(`https://localhost:44380/getstates/${value}`)
       .then((response: any) => {
         console.log(response.data);
 
@@ -122,7 +122,7 @@ const EditPlant = () => {
     setIsValidState(true);
     setSelectedState(value);
     axios
-      .get(`https://localhost:44349/getcities/${value}`)
+      .get(`https://localhost:44380/getcities/${value}`)
       .then((response: any) => {
         console.log(response.data);
         setCities(response.data);
@@ -222,7 +222,7 @@ const EditPlant = () => {
       console.log(phoneNumber);
 
       axios
-        .post(`https://localhost:44349/editplant`, {
+        .post(`https://localhost:44380/editplant`, {
           plantName: plantName,
           isWareHouse: warehouse,
           country: country,
@@ -243,7 +243,7 @@ const EditPlant = () => {
                 formData.append("plantName", plantName);
               }
               axios
-                .post(`https://localhost:44349/uploadimage`, formData, {
+                .post(`https://localhost:44380/uploadimage`, formData, {
                   headers: {
                     "Content-Type": "multipart/form-data",
                   },

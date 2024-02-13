@@ -76,7 +76,7 @@ const Signup = () => {
       isValidName
     ) {
       axios
-        .post(`https://localhost:44349/signup`, {
+        .post(`https://localhost:44380/signup`, {
           userName: inputName,
           userEmail: inputEmail,
           userPassword: inputPassword,

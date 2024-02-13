@@ -11,7 +11,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       const response = await axios.get(
-        `https://localhost:44349/isValidEmail?userEmail=${encodeURIComponent(
+        `https://localhost:44380/isValidEmail?userEmail=${encodeURIComponent(
           email
         )}`
       );

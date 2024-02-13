@@ -22,7 +22,7 @@ const ChangePassword = () => {
       console.log("yes");
 
       axios
-        .post(`https://localhost:44349/updatepassword`, {
+        .post(`https://localhost:44380/updatepassword`, {
           userEmail: userEmail,
           userPassword: password,
         })

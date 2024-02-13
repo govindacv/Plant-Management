@@ -25,7 +25,7 @@ const AddPlant = () => {
   const [transporterName, setTransporterName] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isValidPlantName, setIsValidPlantName] = useState(true);
-  const [fileSelected, setFileSelected] = useState();
+  const [fileSelected, setFileSelected] = useState([]);
 
   const [isWarehouseValue, setIsWarehouseValue] = useState<string | null>(null);
   const [isValidWarehouseChoice, setIsValidWarehouseChoice] = useState(true);
@@ -40,8 +40,7 @@ const AddPlant = () => {
 
   const [isValidPhoneNumber, setIsvalidPhoneNumber] = useState(true);
   const PhoneNumberRef = useRef<HTMLInputElement | null>(null);
-  const [isValidPlantNameFromServer, SetIsValidPlantNameFromServer] =
-    useState(true);
+  const [isValidPlantNameFromServer, SetIsValidPlantNameFromServer] =useState(true);
   const navigate = useNavigate();
 
   const handleOnBlurPhoneNumber = () => {
@@ -53,8 +52,10 @@ const AddPlant = () => {
   };
 
   useEffect(() => {
+    console.log('hi');
+    
     axios
-      .get(`https://localhost:44349/getcountries`)
+      .get(`https://localhost:44380/getcountries`)
       .then((response) => {
         console.log(response.data);
         setCountries(response.data);
@@ -75,7 +76,7 @@ const AddPlant = () => {
     setSelectedCountry(value);
 
     axios
-      .get(`https://localhost:44349/getstates/${value}`)
+      .get(`https://localhost:44380/getstates/${value}`)
       .then((response: any) => {
         console.log(response.data);
         setStates(response.data);
@@ -89,7 +90,7 @@ const AddPlant = () => {
     setIsValidState(true);
     setSelectedState(value);
     axios
-      .get(`https://localhost:44349/getcities/${value}`)
+      .get(`https://localhost:44380/getcities/${value}`)
       .then((response: any) => {
         console.log(response.data);
         setCities(response.data);
@@ -112,23 +113,27 @@ const AddPlant = () => {
   };
 
   const handlePlantPhotoChange = (e: any) => {
-    console.log(e.target.files[0]);
-
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      console.log(file);
-
-      if (file.type === "image/jpeg" || file.type === "application/pdf") {
-        if (file.size <= 50000000) {
-          setFileSelected(e.target.files[0]);
-        } else {
-          alert("File size should be less than or equal to 50KB.");
-        }
+    if (e.target.files && e.target.files.length > 0) {
+      const files = Array.from(e.target.files);
+  
+      const validFiles = files.filter((file: any) => {
+        return (
+          (file.type === "image/jpeg" || file.type === "application/pdf") &&
+          file.size <= 50000000
+        );
+      });
+  
+      if (validFiles.length === files.length) {
+        // Concatenate the new files with the existing files
+        setFileSelected((prevFiles) => [...prevFiles, ...validFiles]);
       } else {
-        alert("Only JPG and PDF files are allowed.");
+        alert(
+          "Some files are invalid. Please only select JPG and PDF files with size less than or equal to 50KB."
+        );
       }
     }
   };
+  
 
   const handlePlantNameFocus = () => {
     setIsValidPlantName(true);
@@ -170,6 +175,8 @@ const AddPlant = () => {
 
       setIsvalidPhoneNumber(false);
     }
+    console.log(fileSelected);
+
     if (
       plantNamRef.current?.value &&
       isValidPlantName &&
@@ -198,13 +205,15 @@ const AddPlant = () => {
       const plantPhoto = null;
       const formData = new FormData();
       if (fileSelected) {
-        formData.append("formFile", fileSelected);
+        for (let i = 0; i < fileSelected.length; i++) {
+          formData.append("formFiles", fileSelected[i]);
+        }
         formData.append("plantName", plantName);
       }
-
+      
       console.log(PhoneNumberRef.current?.value);
       axios
-        .post(`https://localhost:44349/addplant`, {
+        .post(`https://localhost:44380/addplant`, {
           plantName: plantName,
           isWareHouse: isWareHouse,
           country: country,
@@ -217,11 +226,13 @@ const AddPlant = () => {
         })
         .then((response) => {
           console.log(response.data);
-          if (response.data == 1) {
+          if (response.data > 0) {
             console.log(formData);
+            console.log(response.data);
 
+            
             axios
-              .post(`https://localhost:44349/uploadimage`, formData, {
+              .post(`https://localhost:44380/uploadimage`, formData, {
                 headers: {
                   "Content-Type": "multipart/form-data",
                 },

@@ -13,10 +13,10 @@ const EnterOTP = () => {
   useEffect(() => {
     console.log(userEmail);
     axios
-      .get(`https://localhost:44349/sendotp?email=${userEmail.email}`)
+      .get(`https://localhost:44380/sendotp?email=${userEmail.email}`)
       .then((response) => {
         console.log(response.data);
-        axios.get(`https://localhost:44349/getotp?userEmail=${userEmail.email}`).then((response)=>{
+        axios.get(`https://localhost:44380/getotp?userEmail=${userEmail.email}`).then((response)=>{
           console.log(response.data);
           setOtp(response.data);
           

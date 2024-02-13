@@ -6,7 +6,7 @@ import axios from "axios";
 const Plants = () => {
   const [plants, setPlants] = useState([]);
   useEffect(() => {
-    axios.get(`https://localhost:44349/getplants`).then((response) => {
+    axios.get(`https://localhost:44380/getplants`).then((response) => {
       console.log("hi");
        
       
@@ -32,7 +32,7 @@ const Plants = () => {
 
   const handleDeletePlant = (plantName: string) => {
     axios
-      .post(`https://localhost:44349/deleteplant?plantName=${plantName}`)
+      .post(`https://localhost:44380/deleteplant?plantName=${plantName}`)
       .then((response) => {
         setPlants(response.data);
       })
@@ -63,7 +63,7 @@ const Plants = () => {
                    
                   <img
                     src={plant.PLANTPHOTO}
-                    alt={`Plant ${plant.PLANTNAME}`}
+                    alt={plant.PLANTNAME}
                   />
                 </div>
                 <hr />
