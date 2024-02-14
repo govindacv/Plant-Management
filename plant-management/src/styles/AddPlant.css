@@ -1,11 +1,11 @@
 .addPlant {
-  height: 150dvh;
+  height: 200dvh;
   position: relative;
   background-image: url("https://media.sketchfab.com/models/0de12849e45541538c84fe0a410ea59a/thumbnails/0afbc3a3deec482dadf6890a70398d08/277a25a3ba2345a9888cb7d25430afdf.jpeg");
   background-repeat: no-repeat;
   background-size: cover;
   box-sizing: border-box;
-  overflow-x: hidden  ;
+  overflow-x: hidden;
 }
 .addplant-message {
   padding: 30px 20px;
@@ -22,7 +22,7 @@
   padding: 5px 10px;
 }
 .plant-details {
-  height: 120dvh;
+  height: 180dvh;
   width: 60dvw;
   background-color: aliceblue;
   position: relative;
@@ -87,7 +87,7 @@
 }
 .p-country-dropdown {
   position: relative;
- 
+
   left: 250px;
   top: 50px;
 }
@@ -115,7 +115,6 @@
 .p-country-dropdown select,
 .p-states-dropdown select,
 .p-cities-dropdown select {
-  
   width: 200px;
   height: 40px;
   padding: 5px;
@@ -165,7 +164,7 @@
 .plant--add {
   position: relative;
   left: 45px;
-  top: 150px;
+  top: 200px;
 }
 
 .plant--add button {
@@ -208,17 +207,27 @@
   top: 390px;
   left: 45px;
 }
-.error-message-transporterName
-{
+.error-message-transporterName {
   color: red;
   position: absolute;
   top: 390px;
   left: 45px;
 }
-.error-message-phoneNumber
-{
+.error-message-phoneNumber {
   color: red;
   position: absolute;
   top: 480px;
   left: 45px;
+}
+
+.p-photo-table {
+  position: relative;
+  top: 100px;
+  border-collapse: collapse;
+  left: 20px;
+}
+
+ 
+.p-photo-table td {
+  padding: 10px;
 }

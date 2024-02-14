@@ -8,8 +8,7 @@ const Plants = () => {
   useEffect(() => {
     axios.get(`https://localhost:44380/getplants`).then((response) => {
       console.log("hi");
-       
-      
+
       console.log(response.data);
       setPlants(response.data);
     });
@@ -60,11 +59,8 @@ const Plants = () => {
             {plants.map((plant: any, index) => (
               <div key={index} className="individual-plant-details">
                 <div className="plant-image">
-                   
-                  <img
-                    src={plant.PLANTPHOTO}
-                    alt={plant.PLANTNAME}
-                  />
+                  <img src={plant.PLANTIMAGE}
+                   alt={plant.PLANTNAME} />
                 </div>
                 <hr />
                 <div className="plant-details-name">

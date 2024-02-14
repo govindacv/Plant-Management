@@ -66,7 +66,7 @@ const EditPlant = () => {
     TRANSPORTERNAME
   );
   const [phoneNumber, setPhoneNumber] = useState<string>(PHONENUMBER);
-  const [fileSelected, setFileSelected] = useState(null);
+  const [fileSelected, setFileSelected] = useState([]);
 
   const handleOnBlurPhoneNumber = () => {
     if (PhoneNumberRef.current?.value) {
@@ -75,7 +75,8 @@ const EditPlant = () => {
       setIsvalidPhoneNumber(regex.test(inputNumber));
     }
   };
-
+  const [images, SetImages] = useState([]);
+  const[plantId,setPlantId]=useState("");
   useEffect(() => {
     axios
       .get(`https://localhost:44380/getcountries`)
@@ -89,6 +90,21 @@ const EditPlant = () => {
     handleCountryChange(country);
     handleStateChange(state);
     setTransportationAvailable(ISTRANSPORTATIONAVAILABLE === "yes");
+    axios
+      .get(`https://localhost:44380/getid?plantName=${plantName}`)
+      .then((response) => {
+        if (response.data > 0) {
+          setPlantId(response.data)
+          axios
+            .get(
+              `https://localhost:44380/getimagedetails?plantId=${response.data}`
+            )
+            .then((response) => {
+              console.log(response.data);
+              SetImages(response.data);
+            });
+        }
+      });
   }, []);
 
   const handleOnBlurTransporterName = () => {
@@ -143,17 +159,24 @@ const EditPlant = () => {
     setTransporterName(e.target.value);
   };
 
-  const handlePlantPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (file.type === "image/jpeg" || file.type === "application/pdf") {
-        if (file.size <= 50000) {
-          setFileSelected(e.target.files[0]);
-        } else {
-          alert("File size should be less than or equal to 50KB.");
-        }
+  const handlePlantPhotoChange = (e: any) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const files = Array.from(e.target.files);
+
+      const validFiles = files.filter((file: any) => {
+        return (
+          (file.type === "image/jpeg" || file.type === "application/pdf") &&
+          file.size <= 50000000
+        );
+      });
+
+      if (validFiles.length === files.length) {
+        // Concatenate the new files with the existing files
+        setFileSelected((prevFiles) => [...prevFiles, ...validFiles]);
       } else {
-        alert("Only JPG and PDF files are allowed.");
+        alert(
+          "Some files are invalid. Please only select JPG and PDF files with size less than or equal to 50KB."
+        );
       }
     }
   };
@@ -235,12 +258,16 @@ const EditPlant = () => {
         })
         .then((response) => {
           console.log(response.data);
+          console.log(fileSelected);
+
           if (response.data == 1) {
             if (fileSelected != null) {
               const formData = new FormData();
               if (fileSelected) {
-                formData.append("formFile", fileSelected);
-                formData.append("plantName", plantName);
+                for (let i = 0; i < fileSelected.length; i++) {
+                  formData.append("formFiles", fileSelected[i]);
+                }
+                formData.append("plantName",plantId );
               }
               axios
                 .post(`https://localhost:44380/uploadimage`, formData, {
@@ -264,6 +291,8 @@ const EditPlant = () => {
         });
     }
   };
+
+   
 
   return (
     <div>
@@ -445,8 +474,26 @@ const EditPlant = () => {
               <input
                 type="file"
                 accept=".jpg, .jpeg, .pdf"
+                multiple
                 onChange={handlePlantPhotoChange}
               />
+              {images.length > 0 && (
+                <table className="p-photo-table" border={1}>
+                  <tr>
+                    <td>File Name</td>
+                    <td>File size</td>
+                    <td>File type</td>
+                  </tr>
+                  {images.map((file: any) => (
+                    <tr>
+                      <td>{file.plantImage}</td>
+                      <td>{(file.plantImageSize)  + ' Kb'}</td>
+                      <td>{file.plantImageType}</td>
+                      <td><i className="fa-regular fa-trash-can"></i></td>
+                    </tr>
+                  ))}
+                </table>
+              )}
             </div>
           </div>
           <div className="plant--add">

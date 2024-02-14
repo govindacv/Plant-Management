@@ -40,7 +40,8 @@ const AddPlant = () => {
 
   const [isValidPhoneNumber, setIsvalidPhoneNumber] = useState(true);
   const PhoneNumberRef = useRef<HTMLInputElement | null>(null);
-  const [isValidPlantNameFromServer, SetIsValidPlantNameFromServer] =useState(true);
+  const [isValidPlantNameFromServer, SetIsValidPlantNameFromServer] =
+    useState(true);
   const navigate = useNavigate();
 
   const handleOnBlurPhoneNumber = () => {
@@ -52,8 +53,8 @@ const AddPlant = () => {
   };
 
   useEffect(() => {
-    console.log('hi');
-    
+    console.log("hi");
+
     axios
       .get(`https://localhost:44380/getcountries`)
       .then((response) => {
@@ -114,18 +115,21 @@ const AddPlant = () => {
 
   const handlePlantPhotoChange = (e: any) => {
     if (e.target.files && e.target.files.length > 0) {
+      console.log(e.target.files);
+      
       const files = Array.from(e.target.files);
-  
+
       const validFiles = files.filter((file: any) => {
         return (
           (file.type === "image/jpeg" || file.type === "application/pdf") &&
           file.size <= 50000000
         );
       });
-  
+
       if (validFiles.length === files.length) {
         // Concatenate the new files with the existing files
         setFileSelected((prevFiles) => [...prevFiles, ...validFiles]);
+        console.log(fileSelected);
       } else {
         alert(
           "Some files are invalid. Please only select JPG and PDF files with size less than or equal to 50KB."
@@ -133,7 +137,6 @@ const AddPlant = () => {
       }
     }
   };
-  
 
   const handlePlantNameFocus = () => {
     setIsValidPlantName(true);
@@ -203,14 +206,7 @@ const AddPlant = () => {
       //pass transporte name directly
       const phoneNumber = PhoneNumberRef.current?.value;
       const plantPhoto = null;
-      const formData = new FormData();
-      if (fileSelected) {
-        for (let i = 0; i < fileSelected.length; i++) {
-          formData.append("formFiles", fileSelected[i]);
-        }
-        formData.append("plantName", plantName);
-      }
-      
+
       console.log(PhoneNumberRef.current?.value);
       axios
         .post(`https://localhost:44380/addplant`, {
@@ -227,10 +223,16 @@ const AddPlant = () => {
         .then((response) => {
           console.log(response.data);
           if (response.data > 0) {
+            const formData = new FormData();
+            if (fileSelected) {
+              for (let i = 0; i < fileSelected.length; i++) {
+                formData.append("formFiles", fileSelected[i]);
+              }
+              formData.append("plantName", response.data);
+            }
             console.log(formData);
             console.log(response.data);
 
-            
             axios
               .post(`https://localhost:44380/uploadimage`, formData, {
                 headers: {
@@ -436,6 +438,22 @@ const AddPlant = () => {
               />
             </div>
           </div>
+          {fileSelected.length > 0 && (
+            <table className="p-photo-table" border={1}>
+              <tr>
+                <td>File Name</td>
+                <td>File size</td>
+                <td>File type</td>
+              </tr>
+              {fileSelected.map((file: any) => (
+                <tr>
+                  <td>{file.name}</td>
+                  <td>{file.size}</td>
+                  <td>{file.type +'Kb'}</td>
+                </tr>
+              ))}
+            </table>
+          )}
           <div className="plant--add">
             <button onClick={handleOnClickAdd}>Add plant</button>
           </div>
