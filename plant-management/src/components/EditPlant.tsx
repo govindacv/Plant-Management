@@ -67,6 +67,7 @@ const EditPlant = () => {
   );
   const [phoneNumber, setPhoneNumber] = useState<string>(PHONENUMBER);
   const [fileSelected, setFileSelected] = useState([]);
+  const [toBedeletedID, setToBeDeletedId] = useState<{ Id: number }[]>([]);
 
   const handleOnBlurPhoneNumber = () => {
     if (PhoneNumberRef.current?.value) {
@@ -76,7 +77,7 @@ const EditPlant = () => {
     }
   };
   const [images, SetImages] = useState([]);
-  const[plantId,setPlantId]=useState("");
+  const [plantId, setPlantId] = useState("");
   useEffect(() => {
     axios
       .get(`https://localhost:44380/getcountries`)
@@ -94,7 +95,7 @@ const EditPlant = () => {
       .get(`https://localhost:44380/getid?plantName=${plantName}`)
       .then((response) => {
         if (response.data > 0) {
-          setPlantId(response.data)
+          setPlantId(response.data);
           axios
             .get(
               `https://localhost:44380/getimagedetails?plantId=${response.data}`
@@ -199,6 +200,14 @@ const EditPlant = () => {
     setSelectedCity(city);
     setCity(city);
   };
+
+  const handleDeleteClick = (Id: number) => {
+    console.log(Id);
+
+    setToBeDeletedId((prevIds) => [...prevIds,  Id ]);
+    const updatedImages = images.filter((image) => image.plantImageId !== Id);
+    SetImages(updatedImages);
+  };
   const handleOnClickAdd = () => {
     if (plantNamRef.current?.value == "") {
       console.log(2);
@@ -258,17 +267,21 @@ const EditPlant = () => {
         })
         .then((response) => {
           console.log(response.data);
-          console.log(fileSelected);
 
           if (response.data == 1) {
             if (fileSelected != null) {
               const formData = new FormData();
               if (fileSelected) {
                 for (let i = 0; i < fileSelected.length; i++) {
+                  console.log(fileSelected[i]);
+
                   formData.append("formFiles", fileSelected[i]);
                 }
-                formData.append("plantName",plantId );
+
+                formData.append("plantName", plantId);
               }
+              console.log(formData);
+
               axios
                 .post(`https://localhost:44380/uploadimage`, formData, {
                   headers: {
@@ -281,6 +294,23 @@ const EditPlant = () => {
                 .catch((error) => {
                   console.log(error);
                 });
+
+              if (toBedeletedID.length > 0) {
+                console.log("hi");
+                console.log(toBedeletedID);
+
+                axios
+                  .delete(`https://localhost:44380/deletingtheimages`, {
+                    data: toBedeletedID,
+                  })
+                  .then((response) => {
+                    console.log(response.data);
+                  })
+                  .catch((error) => {
+                    // Handle error
+                    console.error("Error deleting images:", error);
+                  });
+              }
             }
             alert("Plant Edited");
             navigate(`/plants`);
@@ -291,8 +321,6 @@ const EditPlant = () => {
         });
     }
   };
-
-   
 
   return (
     <div>
@@ -487,9 +515,14 @@ const EditPlant = () => {
                   {images.map((file: any) => (
                     <tr>
                       <td>{file.plantImage}</td>
-                      <td>{(file.plantImageSize)  + ' Kb'}</td>
+                      <td>{file.plantImageSize + " Kb"}</td>
                       <td>{file.plantImageType}</td>
-                      <td><i className="fa-regular fa-trash-can"></i></td>
+                      <td>
+                        <i
+                          className="fa-regular fa-trash-can"
+                          onClick={() => handleDeleteClick(file.plantImageId)}
+                        ></i>
+                      </td>
                     </tr>
                   ))}
                 </table>

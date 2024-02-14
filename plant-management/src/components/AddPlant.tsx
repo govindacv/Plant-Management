@@ -116,7 +116,7 @@ const AddPlant = () => {
   const handlePlantPhotoChange = (e: any) => {
     if (e.target.files && e.target.files.length > 0) {
       console.log(e.target.files);
-      
+
       const files = Array.from(e.target.files);
 
       const validFiles = files.filter((file: any) => {
@@ -228,7 +228,9 @@ const AddPlant = () => {
               for (let i = 0; i < fileSelected.length; i++) {
                 formData.append("formFiles", fileSelected[i]);
               }
-              formData.append("plantName", response.data);
+              
+
+               formData.append("plantName", response.data);
             }
             console.log(formData);
             console.log(response.data);
@@ -449,7 +451,7 @@ const AddPlant = () => {
                 <tr>
                   <td>{file.name}</td>
                   <td>{file.size}</td>
-                  <td>{file.type +'Kb'}</td>
+                  <td>{file.type + "Kb"}</td>
                 </tr>
               ))}
             </table>
