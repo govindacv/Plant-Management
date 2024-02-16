@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import "../styles/plants.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
 const Plants = () => {
   const [plants, setPlants] = useState([]);
   useEffect(() => {
@@ -40,6 +39,8 @@ const Plants = () => {
       });
   };
 
+
+
   return (
     <div>
       <div className="plants">
@@ -47,6 +48,7 @@ const Plants = () => {
           <div className="plants-add">
             <button onClick={handleAddPlantClick}>Add New Plant</button>
           </div>
+          
           <div className="Logout">
             <button onClick={handleLogOutOnClick}>Log out</button>
           </div>
@@ -59,8 +61,7 @@ const Plants = () => {
             {plants.map((plant: any, index) => (
               <div key={index} className="individual-plant-details">
                 <div className="plant-image">
-                  <img src={plant.PLANTIMAGE}
-                   alt={plant.PLANTNAME} />
+                  <img src={plant.PLANTIMAGE} alt={plant.PLANTNAME} />
                 </div>
                 <hr />
                 <div className="plant-details-name">
@@ -93,4 +94,6 @@ const Plants = () => {
   );
 };
 
+ 
+ 
 export default Plants;

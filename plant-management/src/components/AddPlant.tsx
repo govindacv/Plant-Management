@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import "../styles/AddPlant.css";
 import { useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
 
 interface Country {
   countryName: string;
@@ -228,9 +229,8 @@ const AddPlant = () => {
               for (let i = 0; i < fileSelected.length; i++) {
                 formData.append("formFiles", fileSelected[i]);
               }
-              
 
-               formData.append("plantName", response.data);
+              formData.append("plantName", response.data);
             }
             console.log(formData);
             console.log(response.data);
@@ -257,8 +257,71 @@ const AddPlant = () => {
     }
   };
 
+  //to download excel format
+  const handleDownloadExcelFormat = () => {
+    const workbook = XLSX.utils.book_new();
+
+    // Generate Excel template data
+    const templateData = generateExcelTemplate();
+
+    // Add worksheet to the workbook
+    const worksheet = XLSX.utils.aoa_to_sheet(templateData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Plant Template");
+
+    // Write the workbook to a file
+    XLSX.writeFile(workbook, "plant_template.xlsx");
+  };
+
+  // Function to generate Excel template data
+  const generateExcelTemplate = () => {
+    const headers = [
+      "Plant Name",
+      "Is Warehouse",
+      "Country",
+      "State",
+      "City",
+      "Is Transportation Available",
+      "Transporter Name",
+      "Phone Number",
+      "Plant Photo",
+    ];
+
+    return [headers];
+  };
+
+  //to handle EXCEL upload
+  const fileInputRef = useRef(null);
+
+  const handleExcelUpload = () => {
+    console.log('1');
+    
+    fileInputRef.current.click(); 
+  };
+
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];  
+     console.log("Uploaded file:", file);
+  };
   return (
     <div>
+      <div className="plants--header">
+        <div className="plants-add">
+          <button onClick={handleDownloadExcelFormat}>
+            Download excel template
+          </button>
+        </div>
+
+        <div className="Logout">
+          <button onClick={handleExcelUpload}>Excel Upload</button>
+          <input
+            type="file"
+            accept=".xlsx, .xls" // Specify accepted file types
+            ref={fileInputRef} // Reference to hidden file input
+            style={{ display: "none" }} // Hide the file input
+            onChange={handleFileSelect} // Call the function when a file is selected
+          />
+        </div>
+      </div>
       <div className="addPlant">
         <div className="addplant-message">
           <h1>Add Plant</h1>
