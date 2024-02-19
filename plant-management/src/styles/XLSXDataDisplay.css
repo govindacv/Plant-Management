@@ -1,0 +1,44 @@
+.xlsx {
+  height: 200dvh;
+  position: relative;
+  background-image: url("https://media.sketchfab.com/models/0de12849e45541538c84fe0a410ea59a/thumbnails/0afbc3a3deec482dadf6890a70398d08/277a25a3ba2345a9888cb7d25430afdf.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.xlsx-table {
+  height: 180dvh;
+  width: 80dvw;
+  background-color: aliceblue;
+ 
+}
+#xlpreview
+{
+    border-collapse: collapse;
+    margin:auto;
+    margin-top: 100px;
+}
+#xlpreview td
+{
+    padding: 10px;
+}
+
+#uploadXlxs
+{
+    position: relative;
+    right: -950px;
+    padding:  10px 30px;
+    
+}
+
+.xlxl-h3details
+{
+    position: relative;
+    font-size: 1.7rem;
+     left: 450px;
+     top: 40px;
+}

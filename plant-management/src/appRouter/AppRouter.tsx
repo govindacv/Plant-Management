@@ -8,6 +8,7 @@ import EditPlant from "../components/EditPlant";
 import ForgotPassword from "../components/ForgotPassword";
 import EnterOTP from "../components/EnterOTP";
 import ChangePassword from "../components/ChangePassword";
+import XLSXDataDisplay from "../components/XLSXDataDisplay";
 
 
 
@@ -54,6 +55,10 @@ const AppRouter=createBrowserRouter([{
         {
             path:'/changepassword',
             element :<ChangePassword/>
+        },
+        {
+            path:'xlsxData',
+            element:<XLSXDataDisplay/>
         }
 
 

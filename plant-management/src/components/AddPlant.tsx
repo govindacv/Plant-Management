@@ -24,9 +24,9 @@ const AddPlant = () => {
   const [transportationAvailable, setTransportationAvailable] =
     useState<boolean>(false);
   const [transporterName, setTransporterName] = useState<string>("");
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [phoneNumber, _setPhoneNumber] = useState<string>("");
   const [isValidPlantName, setIsValidPlantName] = useState(true);
-  const [fileSelected, setFileSelected] = useState([]);
+  const [fileSelected, setFileSelected] = useState<File[]>([]);
 
   const [isWarehouseValue, setIsWarehouseValue] = useState<string | null>(null);
   const [isValidWarehouseChoice, setIsValidWarehouseChoice] = useState(true);
@@ -52,24 +52,22 @@ const AddPlant = () => {
       setIsvalidPhoneNumber(regex.test(inputNumber));
     }
   };
+  const [xlsxData, setXlsxData] = useState<any[]>([]);
 
   useEffect(() => {
-    console.log("hi");
-
     axios
       .get(`https://localhost:44380/getcountries`)
       .then((response) => {
-        console.log(response.data);
         setCountries(response.data);
       })
       .catch((error) => {
         console.error("Error fetching countries:", error);
       });
   }, []);
+  const plantNameRegex = /^[a-zA-Z0-9]{3,20}$/;
 
   const handleOnBlurTransporterName = () => {
     if (transporterName != "") {
-      const plantNameRegex = /^[a-zA-Z0-9]{3,20}$/;
       setIsValidTransporterName(plantNameRegex.test(transporterName));
     }
   };
@@ -114,13 +112,11 @@ const AddPlant = () => {
     setTransporterName(e.target.value);
   };
 
-  const handlePlantPhotoChange = (e: any) => {
+  const handlePlantPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      console.log(e.target.files);
-
       const files = Array.from(e.target.files);
 
-      const validFiles = files.filter((file: any) => {
+      const validFiles = files.filter((file) => {
         return (
           (file.type === "image/jpeg" || file.type === "application/pdf") &&
           file.size <= 50000000
@@ -128,9 +124,7 @@ const AddPlant = () => {
       });
 
       if (validFiles.length === files.length) {
-        // Concatenate the new files with the existing files
         setFileSelected((prevFiles) => [...prevFiles, ...validFiles]);
-        console.log(fileSelected);
       } else {
         alert(
           "Some files are invalid. Please only select JPG and PDF files with size less than or equal to 50KB."
@@ -206,7 +200,6 @@ const AddPlant = () => {
       const isTransportationAvailable = transportationAvailable ? "yes" : "No";
       //pass transporte name directly
       const phoneNumber = PhoneNumberRef.current?.value;
-      const plantPhoto = null;
 
       console.log(PhoneNumberRef.current?.value);
       axios
@@ -219,7 +212,6 @@ const AddPlant = () => {
           isTransportationAvailable: isTransportationAvailable,
           transporterName: transporterName,
           phoneNumber: phoneNumber,
-          plantPhoto: plantPhoto,
         })
         .then((response) => {
           console.log(response.data);
@@ -275,32 +267,146 @@ const AddPlant = () => {
   // Function to generate Excel template data
   const generateExcelTemplate = () => {
     const headers = [
-      "Plant Name",
-      "Is Warehouse",
+      "PlantName",
+      "IsWarehouse",
       "Country",
       "State",
       "City",
-      "Is Transportation Available",
-      "Transporter Name",
-      "Phone Number",
-      "Plant Photo",
+      "IsTransportationAvailable",
+      "TransporterName",
+      "PhoneNumber",
     ];
 
     return [headers];
   };
 
   //to handle EXCEL upload
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleExcelUpload = () => {
-    console.log('1');
-    
-    fileInputRef.current.click(); 
+    if (fileInputRef.current != null) {
+      fileInputRef.current.click();
+    }
   };
 
-  const handleFileSelect = (event) => {
-    const file = event.target.files[0];  
-     console.log("Uploaded file:", file);
+  const handleFileSelect = (event: any) => {
+    const file = event.target.files[0];
+    console.log("Uploaded file:", event.target.files[0]);
+    const reader = new FileReader();
+    reader.readAsBinaryString(file);
+    reader.onload = (e) => {
+      const binaryString = e.target?.result;
+      const workbook = XLSX.read(binaryString, { type: "binary" });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const data = XLSX.utils.sheet_to_json(sheet);
+      console.log(data);
+      setXlsxData(data);
+    };
+  };
+
+  const [validPlants, setValidPlants] = useState(0);
+  useEffect(() => {
+    if (xlsxData.length > 0) {
+      xlsxData.forEach((plantData: any, index: number) => {
+        const {
+          PlantName,
+          IsWarehouse,
+          Country,
+          State,
+          City,
+          IsTransportationAvailable,
+          TransporterName,
+          PhoneNumber,
+        } = plantData;
+
+        // Perform validation checks for each field
+        const isValidPlantName = /^[a-zA-Z0-9 ]{3,20}$/.test(PlantName);
+        const isValidWarehouseValue = ["Yes", "No"].includes(IsWarehouse);
+        const isValidTransportationState = ["Yes", "No"].includes(
+          IsTransportationAvailable
+        );
+        const isValidPhoneNumber = /^[0-9]{10}$/.test(PhoneNumber);
+        const isValidCountry = countries.some((c) => c.countryName === Country);
+        let isValidState = false;
+        let isValidCity = false;
+        let isValidTransporterName = true; // Default to true
+
+        if (isValidCountry) {
+          // Country is valid, make the state API call
+          axios
+            .get(`https://localhost:44380/getstates/${Country}`)
+            .then((response: any) => {
+              const states = response.data;
+              // Check if the state is valid
+              isValidState = states.some((s: any) => s.stateName === State);
+
+              if (isValidState) {
+                // If the state is valid, make the city API call
+                axios
+                  .get(`https://localhost:44380/getcities/${State}`)
+                  .then((response: any) => {
+                    const cities = response.data;
+                    // Check if the city is valid
+                    isValidCity = cities.some((c: any) => c.cityName === City);
+
+                    if (
+                      isValidPlantName &&
+                      isValidWarehouseValue &&
+                      isValidPhoneNumber &&
+                      isValidTransportationState &&
+                      isValidState &&
+                      isValidCity
+                    ) {
+                      //checking if the transportaion is avalialable
+                      if (IsTransportationAvailable == "Yes") {
+                        isValidTransporterName = /^[a-zA-Z0-9 ]{3,20}$/.test(
+                          TransporterName
+                        );
+                        if (isValidTransporterName) {
+                          console.log(plantData);
+                          setValidPlants((prev) => prev + 1);
+                        } else {
+                          console.log(`Invalid record ${index + 1}`);
+                        }
+                      }
+                      //No transportaion
+                      else {
+                        console.log(plantData);
+                        setValidPlants((prev) => prev + 1);
+                      }
+                    } else {
+                      console.log(`Invalid record ${index + 1}`);
+                    }
+                  })
+                  .catch((error) => {
+                    console.error("Error fetching cities:", error);
+                  });
+              } else {
+                // State is not valid
+                console.error("Invalid state:", State);
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching states:", error);
+            });
+        }
+      });
+      console.log(validPlants);
+    }
+
+    // Check if all records are valid and navigate accordingly
+  }, [xlsxData, countries]); // Add countries to the dependency array to ensure it's up-to-date
+
+  const handlePreviewClick = () => {
+    console.log(xlsxData.length);
+    console.log(validPlants);
+
+    if (xlsxData.length == validPlants) {
+      navigate('/xlsxData',{state:xlsxData});
+    } else {
+      alert("Invalid record");
+    }
   };
   return (
     <div>
@@ -315,11 +421,16 @@ const AddPlant = () => {
           <button onClick={handleExcelUpload}>Excel Upload</button>
           <input
             type="file"
-            accept=".xlsx, .xls" // Specify accepted file types
-            ref={fileInputRef} // Reference to hidden file input
-            style={{ display: "none" }} // Hide the file input
-            onChange={handleFileSelect} // Call the function when a file is selected
+            accept=".xlsx, .xls"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            onChange={handleFileSelect}
           />
+        </div>
+        <div className="preview">
+          {xlsxData.length > 0 && (
+            <button onClick={handlePreviewClick}>Preview</button>
+          )}
         </div>
       </div>
       <div className="addPlant">

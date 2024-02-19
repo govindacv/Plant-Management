@@ -25,14 +25,13 @@ const EditPlant = () => {
 
   const [isValidPlantName, setIsValidPlantName] = useState(true);
 
-  const [isWarehouseValue, setIsWarehouseValue] = useState<string | null>(null);
-  const [isValidWarehouseChoice, setIsValidWarehouseChoice] = useState(true);
+   const [_isValidWarehouseChoice, setIsValidWarehouseChoice] = useState(true);
 
   const [isValidCountry, setIsValidCountry] = useState(true);
   const plantNamRef = useRef<HTMLInputElement | null>(null);
   const [selectedState, setSelectedState] = useState<string>("");
   const [isValidState, setIsValidState] = useState(true);
-  const [selectCity, setSelectedCity] = useState<string>("");
+  const [_selectCity, setSelectedCity] = useState<string>("");
   const [isValidCity, setIsValidCity] = useState(true);
   const [isValidTransporterName, setIsValidTransporterName] = useState(true);
 
@@ -66,7 +65,7 @@ const EditPlant = () => {
     TRANSPORTERNAME
   );
   const [phoneNumber, setPhoneNumber] = useState<string>(PHONENUMBER);
-  const [fileSelected, setFileSelected] = useState([]);
+  const [fileSelected, setFileSelected] = useState<File[]>([]); // Specify File[] as the type
   const [toBedeletedID, setToBeDeletedId] = useState<{ Id: number }[]>([]);
 
   const handleOnBlurPhoneNumber = () => {
@@ -173,7 +172,9 @@ const EditPlant = () => {
 
       if (validFiles.length === files.length) {
         // Concatenate the new files with the existing files
-        setFileSelected((prevFiles) => [...prevFiles, ...validFiles]);
+        setFileSelected((prevFiles: File[]) => {
+          return [...prevFiles, ...validFiles] as File[];
+        });
       } else {
         alert(
           "Some files are invalid. Please only select JPG and PDF files with size less than or equal to 50KB."
@@ -204,8 +205,10 @@ const EditPlant = () => {
   const handleDeleteClick = (Id: number) => {
     console.log(Id);
 
-    setToBeDeletedId((prevIds) => [...prevIds,  Id ]);
-    const updatedImages = images.filter((image) => image.plantImageId !== Id);
+    setToBeDeletedId((prevIds: any) => [...prevIds, Id]);
+    const updatedImages = images.filter(
+      (image: any) => image.plantImageId !== Id
+    );
     SetImages(updatedImages);
   };
   const handleOnClickAdd = () => {
@@ -460,7 +463,7 @@ const EditPlant = () => {
               <div className="p-transporter-input">
                 <input
                   type="text"
-                  value={transporterName}
+                  value={transporterName ?? ""}
                   onChange={handleTransporterNameChange}
                   onBlur={handleOnBlurTransporterName}
                   onFocus={() => setIsValidTransporterName(true)}
@@ -515,7 +518,7 @@ const EditPlant = () => {
                   {images.map((file: any) => (
                     <tr>
                       <td>{file.plantImage}</td>
-                      <td>{file.plantImageSize + " Kb"}</td>
+                      <td>{(file.plantImageSize /1000).toFixed(1)+ " Kb"}</td>
                       <td>{file.plantImageType}</td>
                       <td>
                         <i

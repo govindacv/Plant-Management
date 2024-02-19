@@ -1,11 +1,11 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import   { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const EnterOTP = () => {
   const location = useLocation();
   const email = location.state;
-  const [userEmail, setUserEmail] = useState(email);
+  const [userEmail, _setUserEmail] = useState(email);
   const [otp, setOtp] = useState(0);
   const navigate = useNavigate();
   const [inputOtp, setInputOtp] = useState();
